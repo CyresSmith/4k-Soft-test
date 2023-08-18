@@ -7,8 +7,6 @@ const Input = ({
   placeholder,
   id,
   onClick = null,
-  onChange = null,
-  value = '',
   readOnly = false,
 }) => {
   return (
@@ -20,8 +18,6 @@ const Input = ({
         type={type}
         placeholder={placeholder}
         onClick={onClick}
-        onChange={onChange}
-        value={value}
         readOnly={readOnly}
       />
       <ErrorMessage name={id} component={Error} />

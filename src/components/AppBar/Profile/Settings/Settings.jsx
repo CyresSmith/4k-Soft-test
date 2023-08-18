@@ -1,14 +1,21 @@
-import { Formik } from 'formik';
+import { useEffect, useState } from 'react';
+import { ErrorMessage, Formik } from 'formik';
 import * as Yup from 'yup';
+import { Notify } from 'notiflix';
+
 import { useDispatch, useSelector } from 'react-redux';
 
-import { getAuth } from 'redux/selectors';
+import { FiEyeOff, FiEye } from 'react-icons/fi';
 
-import Input from 'components/shared/Input';
-import PasswordInput from 'components/shared/Input/PasswordInput';
+import { getAuth } from 'redux/selectors';
+import { useUpdateUserDataMutation } from 'redux/authAPI';
+import { setUser } from 'redux/authSlice';
+
+import { passwordRegExp } from 'components/shared/RegExps';
+
 import TextButton from 'components/shared/button/TextButton';
 import Button from 'components/shared/button/Button';
-
+import IconButton from 'components/shared/button/IconButton';
 import {
   Box,
   FormBox,
@@ -16,18 +23,26 @@ import {
   UserImg,
   UserImgBox,
 } from './Settings.styled';
-
-import { passwordRegExp } from 'components/shared/RegExps';
-import { useUpdateUserDataMutation } from 'redux/authAPI';
-import { useEffect, useState } from 'react';
-import { Notify } from 'notiflix';
-import { setUser } from 'redux/authSlice';
+import {
+  InputBox,
+  InputField,
+  Label,
+  Error,
+} from 'components/shared/Input/Input.styled';
+import { PasswordInputBox } from 'components/shared/Input/PasswordInput/PasswordInput.styled';
 
 const ValidationSchema = Yup.object().shape({
-  name: Yup.string()
+  fullName: Yup.string()
+    .test('notEmpty', 'Cannot be empty', function (value) {
+      return this.parent.name || value !== undefined;
+    })
     .min(3, 'Must be at least 3 characters')
     .max(20, 'Must be max 20 characters'),
-  email: Yup.string().email('Must be valid email'),
+  email: Yup.string()
+    .test('notEmpty', 'Cannot be empty', function (value) {
+      return this.parent.name || value !== undefined;
+    })
+    .email('Must be valid email'),
   password: Yup.string()
     .min(8, 'Must be at least 8 characters')
     .max(16, 'Must be max 16 characters')
@@ -35,30 +50,56 @@ const ValidationSchema = Yup.object().shape({
       passwordRegExp,
       'Must be at least one capital letter and one number'
     ),
-  confirmPassword: Yup.string().oneOf(
-    [Yup.ref('password'), null],
-    'Passwords must match!'
-  ),
+
+  confirmPassword: Yup.string()
+    .test(
+      'additionalField-required',
+      'Password confirm required',
+      function (value) {
+        if (this.parent.password && this.parent.password.length > 0) {
+          return value && value.length > 0;
+        }
+        return true;
+      }
+    )
+    .oneOf([Yup.ref('password'), null], 'Passwords must match!'),
+
+  // confirmPassword: Yup.string().oneOf(
+  //   [Yup.ref('password'), null],
+  //   'Passwords must match!'
+  // ),
 });
 
-const Settings = () => {
+const Settings = ({ setShowModal }) => {
   const { user } = useSelector(getAuth);
 
-  const [userData, setUserData] = useState({
+  const [formState, setFormState] = useState({
     fullName: user.fullName,
     email: user.email,
     password: '',
     confirmPassword: '',
   });
 
-  const initialValues = {
-    fullName: userData.fullName,
-    email: userData.email,
-    password: '',
-    confirmPassword: '',
-  };
+  const [passwordVisible, setPasswordVisible] = useState({
+    password: false,
+    confirmPassword: false,
+  });
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!user._id) return;
+
+    const { email, fullName } = user;
+    setFormState(prev => ({ ...prev, fullName, email }));
+  }, [user]);
+
+  const initialValues = {
+    fullName: formState.fullName,
+    email: formState.email,
+    password: formState.password,
+    confirmPassword: formState.confirmPassword,
+  };
 
   const [updateUserData, { isLoading, isSuccess, isError, error }] =
     useUpdateUserDataMutation();
@@ -68,12 +109,16 @@ const Settings = () => {
     dispatch(setUser(userData.user));
   };
 
+  const handleFieldChange = e =>
+    setFormState(prev => ({ ...prev, [e.target.id]: e.target.value }));
+
   useEffect(() => {
     if (isSuccess) {
       Notify.success('Data successfully updated', {
         showOnlyTheLastOne: true,
         position: 'right-top',
       });
+      setShowModal(false);
     }
 
     if (isError) {
@@ -82,7 +127,7 @@ const Settings = () => {
         position: 'right-top',
       });
     }
-  }, [error, isError, isSuccess]);
+  }, [error, isError, isSuccess, setShowModal]);
 
   return (
     <Formik
@@ -101,61 +146,104 @@ const Settings = () => {
         resetForm();
       }}
     >
-      {({ values, setFieldValue }) => (
+      {({ setFieldValue }) => (
         <SettingsFormBox>
           <Box>
             <UserImgBox>
               <UserImg src={user.avatarUrl} />
               <TextButton>Change photo</TextButton>
             </UserImgBox>
+
             <FormBox>
-              <Input
-                type="fullName"
-                label="Full name"
-                placeholder="First & Last name"
-                id="fullName"
-                onChange={e => {
-                  setFieldValue('fullName', e.target.value);
-                  setUserData(prev => ({ ...prev, fullName: e.target.value }));
-                }}
-                value={userData.fullName}
-              />
+              <InputBox>
+                <Label htmlFor="fullName">Full name</Label>
+                <InputField
+                  id="fullName"
+                  name="fullName"
+                  type="text"
+                  placeholder="First & last name"
+                  onChange={e => {
+                    setFieldValue('fullName', e.target.value.trim());
+                    handleFieldChange(e);
+                  }}
+                  value={formState.fullName}
+                />
+                <ErrorMessage name="fullName" component={Error} />
+              </InputBox>
 
-              <Input
-                type="email"
-                id="email"
-                label="Email"
-                placeholder="example@email.com"
-                onChange={e => {
-                  setFieldValue('email', e.target.value);
-                  setUserData(prev => ({ ...prev, email: e.target.value }));
-                }}
-                value={userData.email}
-              />
+              <InputBox>
+                <Label htmlFor="email">Email</Label>
+                <InputField
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="example@email.com"
+                  onChange={e => {
+                    setFieldValue('email', e.target.value.trim());
+                    handleFieldChange(e);
+                  }}
+                  value={formState.email}
+                />
+                <ErrorMessage name="email" component={Error} />
+              </InputBox>
 
-              <PasswordInput
-                id="password"
-                label="Password"
-                placeholder="********"
-                onChange={e => {
-                  setUserData(prev => ({ ...prev, password: e.target.value }));
-                  setFieldValue('password', e.target.value);
-                }}
-                value={userData.password}
-              />
-              <PasswordInput
-                id="confirmPassword"
-                label="Confirm password"
-                placeholder="********"
-                onChange={e => {
-                  setUserData(prev => ({
-                    ...prev,
-                    confirmPassword: e.target.value,
-                  }));
-                  setFieldValue('confirmPassword', e.target.value);
-                }}
-                value={userData.confirmPassword}
-              />
+              <PasswordInputBox>
+                <InputBox>
+                  <Label htmlFor="password">Password</Label>
+                  <InputField
+                    id="password"
+                    name="password"
+                    type={passwordVisible.password ? 'text' : 'password'}
+                    placeholder="********"
+                    onChange={e => {
+                      setFieldValue('password', e.target.value.trim());
+                      handleFieldChange(e);
+                    }}
+                    value={formState.password}
+                  />
+                  <ErrorMessage name="password" component={Error} />
+                </InputBox>
+                <IconButton
+                  icon={passwordVisible.password ? FiEye : FiEyeOff}
+                  iconSize={24}
+                  onClick={() =>
+                    setPasswordVisible(prev => ({
+                      ...prev,
+                      password: !prev.password,
+                    }))
+                  }
+                  round
+                />
+              </PasswordInputBox>
+
+              <PasswordInputBox>
+                <InputBox>
+                  <Label htmlFor="confirmPassword">Confirm password</Label>
+                  <InputField
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type={passwordVisible.confirmPassword ? 'text' : 'password'}
+                    placeholder="********"
+                    onChange={e => {
+                      setFieldValue('confirmPassword', e.target.value.trim());
+                      handleFieldChange(e);
+                    }}
+                    value={formState.confirmPassword}
+                  />
+                  <ErrorMessage name="confirmPassword" component={Error} />
+                </InputBox>
+                <IconButton
+                  icon={passwordVisible.confirmPassword ? FiEye : FiEyeOff}
+                  iconSize={24}
+                  onClick={() =>
+                    setPasswordVisible(prev => ({
+                      ...prev,
+                      confirmPassword: !prev.confirmPassword,
+                    }))
+                  }
+                  round
+                />
+              </PasswordInputBox>
             </FormBox>
           </Box>
           <Button type="submit" isLoading={isLoading} disabled={isLoading}>

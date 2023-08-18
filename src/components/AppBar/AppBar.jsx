@@ -79,7 +79,7 @@ const AppBar = () => {
         isOpen={showModal}
         title="Settings"
       >
-        <Settings />
+        <Settings setShowModal={setShowModal} />
       </Modal>
     </AppBarBox>
   );

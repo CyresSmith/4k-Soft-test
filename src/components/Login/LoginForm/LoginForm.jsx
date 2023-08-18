@@ -60,7 +60,10 @@ const LoginForm = () => {
     }
 
     if (isError) {
-      console.error(error);
+      Notify.failure(error.data.message, {
+        showOnlyTheLastOne: true,
+        position: 'right-top',
+      });
     }
   }, [error, isError, isSuccess, navigate]);
 
