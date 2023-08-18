@@ -1,22 +1,24 @@
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
+import { getAuth } from 'redux/selectors';
+
 import Container from 'components/shared/Container';
-import Logo from 'components/shared/Logo/Logo';
+import Logo from 'components/shared/Logo';
 import Popup from 'components/shared/Popup';
+import Modal from 'components/shared/Modal';
+import Settings from './Profile/Settings';
 import Profile from './Profile';
+import UserNavigation from './UserNavigation';
 
 import { AppBarBox, UserAvatar, UserBox } from './AppBar.styled';
 
-const user = {
-  id: 2,
-  name: 'Alexa A',
-  email: 'alexa.amber@gmail.com',
-  img: 'https://www.adobe.com/content/dam/cc/us/en/creativecloud/photography/discover/portrait-photography/CODERED_B1_portrait_photography-P4a_438x447.jpg.img.jpg',
-};
-
 const AppBar = () => {
   const [popUpShow, setPopUpShow] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
+  const auth = useSelector(getAuth);
 
   const handlePopupToggle = type => {
     setPopUpShow(prev => {
@@ -52,17 +54,33 @@ const AppBar = () => {
           <Logo />
         </Link>
 
-        <UserBox>
-          <UserAvatar
-            src={user.img}
-            onClick={() => handlePopupToggle('profileOpen')}
-          />
+        {!auth.user._id || !auth.accessToken ? (
+          <UserNavigation />
+        ) : (
+          <UserBox>
+            <UserAvatar
+              src={auth.user.avatarUrl}
+              onClick={() => handlePopupToggle('profileOpen')}
+            />
 
-          <Popup isOpen={popUpShow === 'profileOpen'}>
-            <Profile user={user} setPopUpShow={setPopUpShow} />
-          </Popup>
-        </UserBox>
+            <Popup isOpen={popUpShow === 'profileOpen'}>
+              <Profile
+                user={auth.user}
+                setPopUpShow={setPopUpShow}
+                setShowModal={setShowModal}
+              />
+            </Popup>
+          </UserBox>
+        )}
       </Container>
+
+      <Modal
+        toggleModal={() => setShowModal(false)}
+        isOpen={showModal}
+        title="Settings"
+      >
+        <Settings />
+      </Modal>
     </AppBarBox>
   );
 };

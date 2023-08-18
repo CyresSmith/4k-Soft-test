@@ -9,7 +9,7 @@ export const ButtonBox = styled.button`
   border: none;
   color: ${p => (p.color ? p.color : theme.colors.primary.regular)};
   transition: ${theme.transition.primary};
-  padding: ${theme.space[1]};
+  padding: ${theme.space[1]} ${theme.space[2]};
   border-radius: ${theme.radii.m};
 
   svg {

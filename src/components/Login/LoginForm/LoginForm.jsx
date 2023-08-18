@@ -1,7 +1,7 @@
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { IoMdLogIn } from 'react-icons/io';
+import { RiLoginBoxFill } from 'react-icons/ri';
 
 import Input from 'components/shared/Input';
 import PasswordInput from 'components/shared/Input/PasswordInput';
@@ -9,6 +9,13 @@ import Button from 'components/shared/button';
 
 import { passwordRegExp } from 'components/shared/RegExps';
 import { FormBox } from 'components/shared/FormBox/FormBox.styled';
+import { useLoginMutation } from 'redux/authAPI';
+import { useDispatch } from 'react-redux';
+import { setAuth } from 'redux/authSlice';
+import { setAuthHeader } from 'redux/axiosBaseQuery';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Notify } from 'notiflix';
 
 const ValidationSchema = Yup.object().shape({
   email: Yup.string().email('Must be valid email').required('Required'),
@@ -28,9 +35,34 @@ const initialValues = {
 };
 
 const LoginForm = () => {
-  const handleSubmit = async data => {
-    console.log(data);
+  const [login, { isLoading, isSuccess, isError, error }] = useLoginMutation();
+
+  const dispatch = useDispatch();
+
+  const handleSubmit = async userData => {
+    const data = await login(userData);
+
+    const { user, accessToken, refreshToken } = data.data;
+    dispatch(setAuth({ user, accessToken, refreshToken }));
+    setAuthHeader(accessToken);
   };
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate('/');
+
+      Notify.success('Login was success!', {
+        showOnlyTheLastOne: true,
+        position: 'right-top',
+      });
+    }
+
+    if (isError) {
+      console.error(error);
+    }
+  }, [error, isError, isSuccess, navigate]);
 
   return (
     <Formik
@@ -57,7 +89,12 @@ const LoginForm = () => {
 
         <PasswordInput id="password" label="Password" placeholder="********" />
 
-        <Button icon={IoMdLogIn} type="submit">
+        <Button
+          icon={RiLoginBoxFill}
+          isLoading={isLoading}
+          disabled={isLoading}
+          type="submit"
+        >
           Login
         </Button>
       </FormBox>

@@ -1,7 +1,10 @@
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { useNavigate } from 'react-router-dom';
 
-import { FaUserPlus } from 'react-icons/fa';
+import { ImUserPlus } from 'react-icons/im';
+
+import { useRegisterMutation } from 'redux/authAPI';
 
 import Input from 'components/shared/Input';
 import PasswordInput from 'components/shared/Input/PasswordInput';
@@ -9,9 +12,11 @@ import Button from 'components/shared/button';
 
 import { passwordRegExp } from 'components/shared/RegExps';
 import { FormBox } from 'components/shared/FormBox/FormBox.styled';
+import { useEffect } from 'react';
+import { Notify } from 'notiflix';
 
 const ValidationSchema = Yup.object().shape({
-  name: Yup.string()
+  fullName: Yup.string()
     .min(3, 'Must be at least 3 characters')
     .max(20, 'Must be max 20 characters')
     .required('Required'),
@@ -30,35 +35,66 @@ const ValidationSchema = Yup.object().shape({
 });
 
 const initialValues = {
-  name: '',
+  fullName: '',
   email: '',
   password: '',
   confirmPassword: '',
 };
 
 const RegisterForm = () => {
+  const [register, { isLoading, isSuccess, isError, error }] =
+    useRegisterMutation();
+
+  const navigate = useNavigate();
+
   const handleSubmit = async data => {
-    console.log(data);
+    await register(data);
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate('/');
+
+      Notify.success(
+        'Registration was success! Verification email sent on your email. Please confirm!',
+        {
+          showOnlyTheLastOne: true,
+          position: 'right-top',
+        }
+      );
+    }
+
+    if (isError) {
+      Notify.failure(error.data.message, {
+        showOnlyTheLastOne: true,
+        position: 'right-top',
+      });
+    }
+  }, [error, isError, isSuccess, navigate]);
 
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={ValidationSchema}
       onSubmit={(values, { resetForm }) => {
-        const { name, email, password } = values;
+        const { fullName, email, password } = values;
 
         handleSubmit({
-          name: name.trim(),
+          fullName: fullName.trim(),
           email: email.trim(),
           password: password.trim(),
         });
 
-        resetForm();
+        // resetForm();
       }}
     >
       <FormBox>
-        <Input type="text" id="name" label="Name" placeholder="Name" />
+        <Input
+          type="text"
+          id="fullName"
+          label="Full name"
+          placeholder="First & Last name"
+        />
 
         <Input
           type="email"
@@ -75,7 +111,12 @@ const RegisterForm = () => {
           placeholder="********"
         />
 
-        <Button icon={FaUserPlus} type="submit">
+        <Button
+          icon={ImUserPlus}
+          disabled={isLoading}
+          isLoading={isLoading}
+          type="submit"
+        >
           Register
         </Button>
       </FormBox>
