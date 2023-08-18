@@ -83,7 +83,7 @@ const RegisterForm = () => {
           password: password.trim(),
         });
 
-        // resetForm();
+        resetForm();
       }}
     >
       <FormBox>

@@ -3,11 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { setAuth } from 'redux/authSlice';
-import { useVerifyQuery } from 'redux/authApi';
+import { useVerifyQuery } from 'redux/authAPI';
 import { setAuthHeader } from 'redux/axiosBaseQuery';
 import { getAuth } from 'redux/selectors';
+
 import { Section } from 'components/shared/Section/Section.styled';
-import Container from 'components/shared/Container/Container';
+import Container from 'components/shared/Container';
 import Title from 'components/shared/Title/Title';
 
 const Verify = () => {
@@ -16,7 +17,7 @@ const Verify = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { data, isLoading, error, isError, isSuccess } = useVerifyQuery(token);
+  const { data, error, isError, isSuccess } = useVerifyQuery(token);
 
   const [Message, setMessage] = useState('Verification page');
 

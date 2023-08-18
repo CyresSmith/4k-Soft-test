@@ -10,13 +10,12 @@ import Button from 'components/shared/button';
 import { passwordRegExp } from 'components/shared/RegExps';
 import { FormBox } from 'components/shared/FormBox/FormBox.styled';
 import { useLoginMutation } from 'redux/authAPI';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setAuth } from 'redux/authSlice';
 import { setAuthHeader } from 'redux/axiosBaseQuery';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Notify } from 'notiflix';
-import { getUser } from 'redux/selectors';
 
 const ValidationSchema = Yup.object().shape({
   email: Yup.string().email('Must be valid email').required('Required'),
