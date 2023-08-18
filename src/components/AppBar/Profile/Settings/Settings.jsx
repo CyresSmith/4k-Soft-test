@@ -44,6 +44,9 @@ const ValidationSchema = Yup.object().shape({
     })
     .email('Must be valid email'),
   password: Yup.string()
+    .test('notEmpty', 'Cannot be empty', function (value) {
+      return this.parent.name || value !== undefined;
+    })
     .min(8, 'Must be at least 8 characters')
     .max(16, 'Must be max 16 characters')
     .matches(
@@ -63,11 +66,6 @@ const ValidationSchema = Yup.object().shape({
       }
     )
     .oneOf([Yup.ref('password'), null], 'Passwords must match!'),
-
-  // confirmPassword: Yup.string().oneOf(
-  //   [Yup.ref('password'), null],
-  //   'Passwords must match!'
-  // ),
 });
 
 const Settings = ({ setShowModal }) => {
