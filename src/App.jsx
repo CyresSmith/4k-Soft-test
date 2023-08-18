@@ -28,7 +28,7 @@ function App() {
 
   const { data, isLoading, error, isError, isSuccess } = useGetCurrentUserQuery(
     null,
-    { skip: skipCurrentUserLoading() }
+    { skip: skipCurrentUserLoading(), refetchOnMountOrArgChange: true }
   );
 
   useEffect(() => {

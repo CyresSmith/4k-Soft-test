@@ -20,7 +20,9 @@ const TextButton = ({
         </Loader>
       )}
       {!isLoading && Icon && <Icon size={iconSize} color={color} />}
-      <Text color={color}>{children}</Text>
+      <Text isIconThere={Icon} color={color}>
+        {children}
+      </Text>
     </ButtonBox>
   );
 };

@@ -29,11 +29,15 @@ const Profile = ({ user, setPopUpShow, setShowModal }) => {
 
   useEffect(() => {
     if (isSuccess) {
-      Notify.success('Successfully Logout');
+      Notify.success('Successfully Logout', {
+        position: 'right-bottom',
+      });
     }
 
     if (isError) {
-      Notify.failure(error.message);
+      Notify.failure(error.message, {
+        position: 'right-bottom',
+      });
     }
   }, [error, isError, isSuccess]);
 

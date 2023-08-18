@@ -58,16 +58,14 @@ const RegisterForm = () => {
       Notify.success(
         'Registration was success! Verification email sent on your email. Please confirm!',
         {
-          showOnlyTheLastOne: true,
-          position: 'right-top',
+          position: 'right-bottom',
         }
       );
     }
 
     if (isError) {
       Notify.failure(error.data.message, {
-        showOnlyTheLastOne: true,
-        position: 'right-top',
+        position: 'right-bottom',
       });
     }
   }, [error, isError, isSuccess, navigate]);

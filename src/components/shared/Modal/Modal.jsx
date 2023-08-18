@@ -8,28 +8,11 @@ import { useTransition } from '@react-spring/web';
 
 import IconButton from '../button/IconButton';
 
-import {
-  Backdrop,
-  LeftSide,
-  ModalHeader,
-  ModalWindow,
-  RightSide,
-  Title,
-} from './Modal.styled';
+import { Backdrop, ModalHeader, ModalWindow, Title } from './Modal.styled';
 
 const modalRoot = document.querySelector('#modal-root');
 
-const Modal = ({
-  toggleModal,
-  isOpen,
-  title = '',
-  children = null,
-  leftSide = null,
-  leftSideWidth = '50%',
-  rightSide = null,
-  rightSideWidth = '50%',
-  duplex = false,
-}) => {
+const Modal = ({ toggleModal, isOpen, title = '', children = null }) => {
   useLockBodyScroll();
 
   const transition = useTransition(isOpen, {
@@ -65,34 +48,22 @@ const Modal = ({
     <>
       {isOpen
         ? createPortal(
-          <Backdrop style={style} onClick={closeModal}>
-            <ModalWindow duplex={duplex}>
-              <ModalHeader>
-                {title !== '' && <Title>{title}</Title>}
-                <IconButton
-                  icon={CgClose}
-                  iconSize={24}
-                  ariaLabel="close button"
-                  onClick={toggleModal}
-                />
-              </ModalHeader>
-
-              {duplex ? (
-                <>
-                  <LeftSide leftSideWidth={leftSideWidth}>
-                    {leftSide}
-                  </LeftSide>
-                  <RightSide rightSideWidth={rightSideWidth}>
-                    {rightSide}
-                  </RightSide>
-                </>
-              ) : (
-                children
-              )}
-            </ModalWindow>
-          </Backdrop>,
-          modalRoot
-        )
+            <Backdrop style={style} onClick={closeModal}>
+              <ModalWindow>
+                <ModalHeader>
+                  {title !== '' && <Title>{title}</Title>}
+                  <IconButton
+                    icon={CgClose}
+                    iconSize={24}
+                    ariaLabel="close button"
+                    onClick={toggleModal}
+                  />
+                </ModalHeader>
+                {children}
+              </ModalWindow>
+            </Backdrop>,
+            modalRoot
+          )
         : null}
     </>
   ));

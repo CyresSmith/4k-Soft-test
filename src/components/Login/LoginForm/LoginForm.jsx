@@ -10,12 +10,13 @@ import Button from 'components/shared/button';
 import { passwordRegExp } from 'components/shared/RegExps';
 import { FormBox } from 'components/shared/FormBox/FormBox.styled';
 import { useLoginMutation } from 'redux/authAPI';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setAuth } from 'redux/authSlice';
 import { setAuthHeader } from 'redux/axiosBaseQuery';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Notify } from 'notiflix';
+import { getUser } from 'redux/selectors';
 
 const ValidationSchema = Yup.object().shape({
   email: Yup.string().email('Must be valid email').required('Required'),
@@ -37,12 +38,17 @@ const initialValues = {
 const LoginForm = () => {
   const [login, { isLoading, isSuccess, isError, error }] = useLoginMutation();
 
+  const [userFullName, setFullName] = useState('');
+
   const dispatch = useDispatch();
 
   const handleSubmit = async userData => {
     const data = await login(userData);
 
     const { user, accessToken, refreshToken } = data.data;
+
+    setFullName(user.fullName);
+
     dispatch(setAuth({ user, accessToken, refreshToken }));
     setAuthHeader(accessToken);
   };
@@ -50,22 +56,20 @@ const LoginForm = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isSuccess) {
+    if (userFullName && isSuccess) {
       navigate('/');
 
-      Notify.success('Login was success!', {
-        showOnlyTheLastOne: true,
-        position: 'right-top',
+      Notify.success(`Glad to see You, ${userFullName}!`, {
+        position: 'right-bottom',
       });
     }
 
     if (isError) {
       Notify.failure(error.data.message, {
-        showOnlyTheLastOne: true,
-        position: 'right-top',
+        position: 'right-bottom',
       });
     }
-  }, [error, isError, isSuccess, navigate]);
+  }, [error, isError, isSuccess, navigate, userFullName]);
 
   return (
     <Formik

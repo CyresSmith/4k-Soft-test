@@ -61,6 +61,13 @@ axios.interceptors.request.use(
   }
 );
 
+axios.interceptors.request.use(config => {
+  if (config.data instanceof FormData)
+    config.headers['Content-Type'] = 'multipart/form-data';
+
+  return config;
+});
+
 axios.interceptors.response.use(
   response => {
     return response;

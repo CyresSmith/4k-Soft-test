@@ -63,6 +63,18 @@ export const authApi = createApi({
       invalidatesTags: ['authApi'],
     }),
 
+    updateAvatar: builder.mutation({
+      query: data => ({
+        url: '/avatar',
+        method: 'PATCH',
+        headers: {
+          'Content-type': 'multipart/form-data',
+        },
+        data,
+      }),
+      invalidatesTags: ['authApi'],
+    }),
+
     logout: builder.mutation({
       query: () => ({
         url: '/logout',
@@ -81,4 +93,5 @@ export const {
   useLogoutMutation,
   useGetCurrentUserQuery,
   useUpdateUserDataMutation,
+  useUpdateAvatarMutation,
 } = authApi;

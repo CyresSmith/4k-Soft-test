@@ -17,6 +17,11 @@ import { AppBarBox, UserAvatar, UserBox } from './AppBar.styled';
 const AppBar = () => {
   const [popUpShow, setPopUpShow] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [userState, setUserState] = useState({
+    _id: '',
+    fullName: '',
+    email: '',
+  });
 
   const auth = useSelector(getAuth);
 
@@ -34,6 +39,10 @@ const AppBar = () => {
       }
     });
   };
+
+  useEffect(() => {
+    setUserState(auth.user);
+  }, [auth.user]);
 
   useEffect(() => {
     window.addEventListener('keydown', e => {
@@ -54,18 +63,18 @@ const AppBar = () => {
           <Logo />
         </Link>
 
-        {!auth.user._id || !auth.accessToken ? (
+        {!userState._id || !auth.accessToken ? (
           <UserNavigation />
         ) : (
           <UserBox>
             <UserAvatar
-              src={auth.user.avatarUrl}
+              src={userState.avatarUrl}
               onClick={() => handlePopupToggle('profileOpen')}
             />
 
             <Popup isOpen={popUpShow === 'profileOpen'}>
               <Profile
-                user={auth.user}
+                user={userState}
                 setPopUpShow={setPopUpShow}
                 setShowModal={setShowModal}
               />
