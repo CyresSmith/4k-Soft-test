@@ -1,10 +1,13 @@
+import Container from 'components/shared/Container/Container';
 import { Section } from 'components/shared/Section/Section.styled';
-import Title from 'components/shared/Title';
+import Students from 'components/Students';
 
 const Home = () => {
   return (
     <Section>
-      <Title>Some content</Title>
+      <Container>
+        <Students />
+      </Container>
     </Section>
   );
 };
