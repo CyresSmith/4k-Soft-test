@@ -4,6 +4,6 @@ import jsconfigPaths from 'vite-jsconfig-paths';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/4k-soft-test',
+  // base: '/4k-soft-test',
   plugins: [react(), jsconfigPaths()],
 });

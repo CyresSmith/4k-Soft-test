@@ -1,5 +1,12 @@
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { Notify } from 'notiflix';
+
 import { RiSettings5Line } from 'react-icons/ri';
 import { IoMdLogOut } from 'react-icons/io';
+
+import { useLogoutMutation } from 'redux/authAPI';
+import { resetAuth } from 'redux/authSlice';
 
 import {
   ProfileBox,
@@ -14,21 +21,43 @@ import TextButton from 'components/shared/button/TextButton';
 
 import theme from 'theme';
 
-const Profile = ({ user, setPopUpShow }) => {
+const Profile = ({ user, setPopUpShow, setShowModal }) => {
+  const dispatch = useDispatch();
+
+  const [logout, { isError, isLoading, isSuccess, error }] =
+    useLogoutMutation();
+
+  useEffect(() => {
+    if (isSuccess) {
+      Notify.success('Successfully Logout', {
+        position: 'right-bottom',
+      });
+    }
+
+    if (isError) {
+      Notify.failure(error.message, {
+        position: 'right-bottom',
+      });
+    }
+  }, [error, isError, isSuccess]);
+
   const handleSettingsClick = () => {
     setPopUpShow(null);
+    setShowModal(true);
   };
 
-  const handleLogoutClick = () => {
+  const handleLogoutClick = async () => {
+    await logout();
     setPopUpShow(null);
+    dispatch(resetAuth());
   };
 
   return (
     <ProfileBox>
       <User>
-        <UserImg src={user.img} alt={user.name} />
+        <UserImg src={user.avatarUrl} alt={user.name} />
         <p>
-          <UserName>{user.name}</UserName>
+          <UserName>{user.fullName}</UserName>
           <UserEmail>{user.email}</UserEmail>
         </p>
       </User>

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import theme from 'theme';
 
-export const ButtonBox = styled.button`
+export const FileInputLabel = styled.label`
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -13,9 +13,9 @@ export const ButtonBox = styled.button`
   border-radius: 19.5px;
 
   svg {
+    margin-right: ${theme.space[2]};
     transition: ${theme.transition.primary};
     color: ${p => (p.color ? p.color : theme.colors.black)};
-    transform-origin: center;
   }
 
   :disabled {
@@ -35,11 +35,16 @@ export const ButtonBox = styled.button`
   }
 `;
 
+export const Input = styled.input`
+  visibility: hidden;
+  width: 0;
+  height: 0;
+`;
+
 export const Text = styled.span`
   color: ${p => (p.color ? p.color : theme.colors.black)};
   font-family: ${theme.fonts.body};
   font-size: ${theme.fontSizes.l};
   font-weight: ${theme.fontWeights.regular};
   transition: ${theme.transition.primary};
-  margin-left: ${p => (p.isIconThere ? theme.space[2] : theme.space[0])};
 `;

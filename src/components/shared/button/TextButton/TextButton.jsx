@@ -1,6 +1,7 @@
-import React from 'react';
+import { BiLoaderCircle } from 'react-icons/bi';
+
 import { ButtonBox, Text } from './TextButton.styled';
-import theme from 'theme';
+import { Loader } from '../Button.styled';
 
 const TextButton = ({
   id = null,
@@ -9,11 +10,19 @@ const TextButton = ({
   iconSize = 34,
   children,
   onClick = null,
+  isLoading = false,
 }) => {
   return (
     <ButtonBox id={id} color={color} onClick={onClick}>
-      {Icon && <Icon size={iconSize} color={color} />}
-      <Text color={color}>{children}</Text>
+      {isLoading && Icon && (
+        <Loader>
+          <BiLoaderCircle size={iconSize} />
+        </Loader>
+      )}
+      {!isLoading && Icon && <Icon size={iconSize} color={color} />}
+      <Text isIconThere={Icon} color={color}>
+        {children}
+      </Text>
     </ButtonBox>
   );
 };

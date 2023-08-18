@@ -7,6 +7,7 @@ export const AppBarBox = styled.header`
   background-color: ${theme.colors.secondary.dark};
 
   div[id='appBarContainer'] {
+    min-height: 52px;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;

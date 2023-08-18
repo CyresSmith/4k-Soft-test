@@ -38,6 +38,6 @@ export const UserEmail = styled.span`
 export const ButtonsBox = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${theme.space[2]};
-  margin-top: ${theme.space[2]};
+  gap: ${theme.space[1]};
+  margin-top: ${theme.space[3]};
 `;
