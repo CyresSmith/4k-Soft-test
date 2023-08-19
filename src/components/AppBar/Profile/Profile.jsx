@@ -32,6 +32,7 @@ const Profile = ({ user, setPopUpShow, setShowModal }) => {
       Notify.success('Successfully Logout', {
         position: 'right-bottom',
       });
+      setPopUpShow(null);
     }
 
     if (isError) {
@@ -39,7 +40,7 @@ const Profile = ({ user, setPopUpShow, setShowModal }) => {
         position: 'right-bottom',
       });
     }
-  }, [error, isError, isSuccess]);
+  }, [error, isError, isSuccess, setPopUpShow]);
 
   const handleSettingsClick = () => {
     setPopUpShow(null);
@@ -48,7 +49,6 @@ const Profile = ({ user, setPopUpShow, setShowModal }) => {
 
   const handleLogoutClick = async () => {
     await logout();
-    setPopUpShow(null);
     dispatch(resetAuth());
   };
 
@@ -77,6 +77,7 @@ const Profile = ({ user, setPopUpShow, setShowModal }) => {
           color={theme.colors.black}
           onClick={handleLogoutClick}
           id="logout"
+          isLoading={isLoading}
         >
           Logout
         </TextButton>

@@ -85,8 +85,6 @@ axios.interceptors.response.use(
 
         if (refreshToken) {
           const data = await refreshAccessToken(refreshToken);
-
-          setAuthHeader(data.accessToken);
         }
 
         return axios(originalRequest);

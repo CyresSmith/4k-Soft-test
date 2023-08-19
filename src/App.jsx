@@ -4,10 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useGetCurrentUserQuery } from 'redux/authAPI';
 import { setUser } from 'redux/authSlice';
-
-import Spinner from 'components/shared/Spinner';
 import { getAuth } from 'redux/selectors';
 
+import Spinner from 'components/shared/Spinner';
 const SharedLayout = lazy(() => import('pages/SharedLayout'));
 const Login = lazy(() => import('pages/Login'));
 const Home = lazy(() => import('pages/Home'));

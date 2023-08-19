@@ -6,7 +6,7 @@ import theme from 'theme';
 const Spinner = () => {
   return (
     <SpinnerBox>
-      <GridLoader color={theme.colors.primary} />
+      <GridLoader color={theme.colors.primary.regular} />
     </SpinnerBox>
   );
 };

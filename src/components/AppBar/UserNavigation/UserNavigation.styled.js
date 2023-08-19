@@ -28,11 +28,16 @@ export const Link = styled(NavLink)`
   }
 
   :hover {
-    color: ${theme.colors.primary.regular};
+    color: ${theme.colors.black};
+    background-color: ${theme.colors.secondary.light};
   }
 
   &.active {
     color: ${theme.colors.primary.regular};
     background-color: ${theme.colors.secondary.bg};
+
+    :hover {
+      color: ${theme.colors.black};
+    }
   }
 `;
