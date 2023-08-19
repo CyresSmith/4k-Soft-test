@@ -6,11 +6,11 @@ export const students = [
   { name: 'David', age: 21, grade: 85 },
 ];
 
-export const sortStudents = students =>
-  [...students].sort((a, b) => {
-    const compare = key => (a, b) =>
-      a[key] > b[key] ? -1 : a[key] < b[key] ? 1 : 0;
+export const sortStudents = students => {
+  const compare = key => (a, b) =>
+    a[key] > b[key] ? -1 : a[key] < b[key] ? 1 : 0;
 
+  return [...students].sort((a, b) => {
     const gradeCompare = compare('grade')(a, b);
     if (gradeCompare !== 0) return gradeCompare;
 
@@ -19,3 +19,4 @@ export const sortStudents = students =>
 
     return compare('name')(a, b);
   });
+};
