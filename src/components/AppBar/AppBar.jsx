@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 
 import { getAuth } from 'redux/selectors';
 
@@ -59,9 +58,7 @@ const AppBar = () => {
   return (
     <AppBarBox>
       <Container id="appBarContainer">
-        <Link to={'/'}>
-          <Logo />
-        </Link>
+        <Logo />
 
         {!userState._id || !auth.accessToken ? (
           <UserNavigation />

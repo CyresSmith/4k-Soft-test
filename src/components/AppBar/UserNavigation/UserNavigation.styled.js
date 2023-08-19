@@ -23,8 +23,8 @@ export const Link = styled(NavLink)`
   padding: ${theme.space[1]} ${theme.space[2]};
   border-radius: 18.5px;
 
-  svg {
-    margin-right: ${theme.space[1]};
+  span {
+    margin-left: ${theme.space[1]};
   }
 
   :hover {

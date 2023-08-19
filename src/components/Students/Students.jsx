@@ -1,8 +1,7 @@
 import Title from 'components/shared/Title';
-import React from 'react';
 
 import { students, sortStudents } from 'studentsSort';
-import { Student, StudentsTable, TableBox } from './Students.styled';
+import { StudentsTable, TableBox } from './Students.styled';
 
 const Students = () => {
   return (

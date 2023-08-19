@@ -13,18 +13,52 @@ export const Backdrop = styled(animated.div)`
   justify-content: center;
   background-color: rgba(0, 0, 0, 0.6);
   z-index: 10;
+
+  @media ${theme.mediaBreakpoints.tablet.media} {
+    overflow-y: auto;
+  }
 `;
 
 export const ModalWindow = styled.div`
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: ${theme.space[4]};
-  padding-top: calc(48px * 2 + 35px);
+  top: 0;
+  left: 0;
+  padding: ${theme.space[3]};
+  padding-top: calc(${theme.space[4]} * 2 + 35px);
   background-color: ${theme.colors.white};
   border-radius: ${theme.radii.l};
   box-shadow: ${theme.shadow.primary};
+
+  @media ${theme.mediaBreakpoints.mobile.media} {
+    width: 100vw;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  @media ${theme.mediaBreakpoints.tablet.media} {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 0);
+    padding: ${theme.space[4]};
+    padding-top: calc(${theme.space[4]} * 2 + 35px);
+    background-color: ${theme.colors.white};
+    border-radius: ${theme.radii.l};
+    box-shadow: ${theme.shadow.primary};
+    overflow-y: scroll;
+  }
+
+  @media ${theme.mediaBreakpoints.desktop.media} {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: ${theme.space[4]};
+    padding-top: calc(${theme.space[4]} * 2 + 35px);
+    background-color: ${theme.colors.white};
+    border-radius: ${theme.radii.l};
+    box-shadow: ${theme.shadow.primary};
+  }
 
   button[aria-labelledby='close button'] {
     margin-left: auto;

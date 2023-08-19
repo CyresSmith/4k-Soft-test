@@ -8,19 +8,41 @@ export const TableBox = styled.div`
   :first-of-type {
     margin-bottom: ${theme.space[4]};
   }
+
+  @media (${theme.mediaBreakpoints.mobile.media}) {
+    border-radius: ${theme.radii.m};
+  }
 `;
 
 export const StudentsTable = styled.table`
-  font-size: ${theme.fontSizes.m};
   border-collapse: collapse;
   text-align: center;
   color: ${theme.colors.primary.hover};
+
+  @media (${theme.mediaBreakpoints.mobile.media}) {
+    font-size: ${theme.fontSizes.s};
+  }
+  @media ${theme.mediaBreakpoints.tablet.media} {
+    font-size: ${theme.fontSizes.m};
+  }
+  @media ${theme.mediaBreakpoints.desktop.media} {
+    font-size: ${theme.fontSizes.m};
+  }
 
   th,
   td:first-of-type {
     background: ${theme.colors.primary.hover};
     color: ${theme.colors.white};
-    padding: ${theme.space[1]} ${theme.space[3]};
+
+    @media (${theme.mediaBreakpoints.mobile.media}) {
+      padding: ${theme.space[1]} ${theme.space[2]};
+    }
+    @media ${theme.mediaBreakpoints.tablet.media} {
+      padding: ${theme.space[1]} ${theme.space[3]};
+    }
+    @media ${theme.mediaBreakpoints.desktop.media} {
+      padding: ${theme.space[1]} ${theme.space[3]};
+    }
   }
 
   th,
@@ -36,9 +58,4 @@ export const StudentsTable = styled.table`
   td:first-of-type {
     text-align: center;
   }
-`;
-
-export const Student = styled.span`
-  display: flex;
-  gap: ${theme.space[2]};
 `;

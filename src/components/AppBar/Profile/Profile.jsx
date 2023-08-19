@@ -5,6 +5,9 @@ import { Notify } from 'notiflix';
 import { RiSettings5Line } from 'react-icons/ri';
 import { IoMdLogOut } from 'react-icons/io';
 
+import useMediaHook from 'hooks/useMediaHook';
+import { textSlice } from 'helpers/helpers';
+
 import { useLogoutMutation } from 'redux/authAPI';
 import { resetAuth } from 'redux/authSlice';
 
@@ -52,13 +55,15 @@ const Profile = ({ user, setPopUpShow, setShowModal }) => {
     dispatch(resetAuth());
   };
 
+  const { MediaType } = useMediaHook();
+
   return (
     <ProfileBox>
       <User>
         <UserImg src={user.avatarUrl} alt={user.name} />
         <p>
-          <UserName>{user.fullName}</UserName>
-          <UserEmail>{user.email}</UserEmail>
+          <UserName>{textSlice(user.fullName, 18)}</UserName>
+          <UserEmail>{textSlice(user.email, 18)}</UserEmail>
         </p>
       </User>
       <ButtonsBox>

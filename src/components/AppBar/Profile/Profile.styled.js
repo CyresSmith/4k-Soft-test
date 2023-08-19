@@ -2,7 +2,15 @@ import styled from '@emotion/styled';
 import theme from 'theme';
 
 export const ProfileBox = styled.div`
-  width: 330px;
+  @media (${theme.mediaBreakpoints.mobile.media}) {
+    width: calc(312px - ${theme.space[3]} * 2);
+  }
+  @media ${theme.mediaBreakpoints.tablet.media} {
+    width: 330px;
+  }
+  @media ${theme.mediaBreakpoints.desktop.media} {
+    width: 330px;
+  }
 
   p {
     display: flex;
