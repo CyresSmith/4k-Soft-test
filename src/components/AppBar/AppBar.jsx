@@ -80,13 +80,15 @@ const AppBar = () => {
         )}
       </Container>
 
-      <Modal
-        toggleModal={() => setShowModal(false)}
-        isOpen={showModal}
-        title="Settings"
-      >
-        <Settings setShowModal={setShowModal} />
-      </Modal>
+      {showModal && (
+        <Modal
+          toggleModal={() => setShowModal(false)}
+          isOpen={showModal}
+          title="Settings"
+        >
+          <Settings setShowModal={setShowModal} />
+        </Modal>
+      )}
     </AppBarBox>
   );
 };

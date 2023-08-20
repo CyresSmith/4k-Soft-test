@@ -84,7 +84,7 @@ axios.interceptors.response.use(
         const refreshToken = store.getState().auth.refreshToken;
 
         if (refreshToken) {
-          const data = await refreshAccessToken(refreshToken);
+          await refreshAccessToken(refreshToken);
         }
 
         return axios(originalRequest);
