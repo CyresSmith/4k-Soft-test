@@ -1,1 +1,0 @@
-import{j as o}from"./index-89c7967e.js";import{C as t}from"./Container-12183c4d.js";import{S as n,T as r}from"./Title-7d999692.js";const s=()=>o.jsx(t,{children:o.jsx(n,{children:o.jsx(r,{children:"Page not found :("})})}),d=s;export{d as default};
