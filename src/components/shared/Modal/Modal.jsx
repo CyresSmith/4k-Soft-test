@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom';
 
 import { CgClose } from 'react-icons/cg';
 
-import { useLockBodyScroll } from 'react-use';
 import { useTransition } from '@react-spring/web';
 
 import IconButton from '../button/IconButton';
@@ -13,8 +12,6 @@ import { Backdrop, ModalHeader, ModalWindow, Title } from './Modal.styled';
 const modalRoot = document.querySelector('#modal-root');
 
 const Modal = ({ toggleModal, isOpen, title = '', children = null }) => {
-  useLockBodyScroll();
-
   const transition = useTransition(isOpen, {
     from: {
       opacity: 0,
@@ -37,6 +34,14 @@ const Modal = ({ toggleModal, isOpen, title = '', children = null }) => {
     },
     [toggleModal]
   );
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     document.addEventListener('keydown', closeModal);
